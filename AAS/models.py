@@ -9,8 +9,6 @@ ActionType = (
     (1, 'modify'),
     (2, 'delete'),
 )
-
-
 AccountType = (
     (0, 'traffic'),
     (1, 'lease'),
@@ -18,7 +16,6 @@ AccountType = (
     (3, 'dailylife'),
     (4, 'other'),
 )
-
 UserStatus = (
     (0, 'normal'),
     (1, 'banned'),
