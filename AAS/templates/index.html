@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+
+<h1>User List</h1>
+{% if userlist %}
+    <ul>
+    {% for user in userlist %}
+        <li><a href="/AAS/{{ user.actor.name }}/">{{ user.actor.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No user are available.</p>
+{% endif %}
+
+
+</body>
+</html>

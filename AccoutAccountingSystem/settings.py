@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'AAS.apps.AasConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -106,7 +108,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST5EDT'  # summer time for Eastern Area
 
 USE_I18N = True
 
