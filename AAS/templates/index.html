@@ -6,16 +6,47 @@
 </head>
 <body>
 
-<h1>User List</h1>
-{% if userlist %}
-    <ul>
-    {% for user in userlist %}
-        <li><a href="/AAS/{{ user.actor.name }}/">{{ user.actor.name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No user are available.</p>
-{% endif %}
+<h1>User Login</h1>
+<label for="userlist">select user to login:</label>
+<br>
+<select id="userlist">
+    {% if userlist %}
+        {% for user in userlist %}
+        <option value= {{ user.actor.name }}>{{ user.actor.name }}</option>
+        {% endfor %}
+    {% else %}
+        <option value="none" >none</option>
+    {% endif %}
+</select>
+<button onclick="window.location.replace('/AAS/login/'+document.getElementById('userlist').value+'/AccountDetail.html')">login</button>
+
+
+{#{% if userlist %}#}
+{#    <ul>#}
+{#    {% for user in userlist %}#}
+{#        <li><a href="/AAS/{{ user.actor.name }}/">{{ user.actor.name }}</a></li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+{#{% else %}#}
+{#    <p>No user are available.</p>#}
+{#{% endif %}#}
+<br>
+
+<div class="userAdd">
+    <h1>Create User</h1>
+    <form role="form" autocomplete="on" action="addAccount/submit/" onsubmit="if(!confirm('Are you going to submit the user?')){return false;}" method="post" id="addUser">
+{#    <form method="post">#}
+        {% csrf_token %}
+        <div class="form" >
+            <label for="username">user name:</label>
+            <input id="username" type="text" name = "userName"/>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary">create user</button>
+        </div>
+    </form>
+</div>
+
 
 
 </body>

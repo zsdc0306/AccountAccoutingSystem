@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Detail</title>
+</head>
+<body>
+
+<div class="Account">
+    <h1>Account Detail</h1>
+{#    <table>#}
+{#        <tr>#}
+{#            <td>User name</td>#}
+{#            <td>Status</td>#}
+{#            <td>VIP number</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>{{ username }}</td>#}
+{#            <td>{{ status }}</td>#}
+{#            <td>{{ VIPID }}</td>#}
+{#        </tr>#}
+{##}
+{#    </table>#}
+    <h4>User name:</h4>
+    <p class = "col-lg-1">{{ username }}</p>
+    <h4>Status:</h4>
+    <p class = "col-lg-1">{{ status }}</p>
+    <h4>VIP Number</h4>
+    {% if VIPID %}
+        <p class = "col-lg-1">{{ VIPID }}</p>
+    {% else %}
+        <p>You are not eligible as a VIP user</p>
+        <form role="form" autocomplete="on" action="/AAS/form/submit/" onsubmit="if(!confirm('Are you going to submit the VIP code?')){return false;}" method="post" id="upgrade VIP">
+        {% csrf_token %}
+        <div class="form" >
+            <label for="vipcode">VIP Code:</label>
+            <input id="vipcode" type="text" name = "VipCode"/>
+            <input value="{{ username }}" type="hidden" name="username"/>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary">upgrade</button>
+        </div>
+    </form>
+    {% endif %}
+
+</div>
+<div class="Record Detail" >
+    <h1>Record List</h1>
+{% if recordlist %}
+    <table width="50%" style="text-align: center;">
+    <tr style="font-weight: bolder">
+        <td>
+            owner
+        </td>
+        <td>
+            income/outcome
+        </td>
+        <td>
+            type
+        </td>
+        <td>
+            count
+        </td>
+        <td>
+            date
+        </td>
+        <td>
+            action
+        </td>
+    </tr>
+        {% for record in recordlist %}
+    <tr>
+        <td>
+            {{ record.owner }}
+        </td>
+        <td>
+            {{ record.type }}
+        </td>
+        <td>
+            {{ record.recordtype }}
+        </td>
+        <td>
+            {{ record.count }}
+        </td>
+        <td>
+            {{ record.dateUpdate }}
+        </td>
+        <td>
+            <form id="recordDelete" method="post" action="/AAS/form/update/">
+                <input type="hidden" value="{{ record.id }}" name = "updaterecord">
+                <button onclick="">
+                    update
+                </button>
+            </form>
+            <form id="recordDelete" method="post" action="/AAS/form/delete/">
+                <input type="hidden" value="{{ record.id }}" name = "deleterecord">
+                <button>
+                    delete
+                </button>
+            </form>
+        </td>
+
+    </tr>
+    {% endfor %}
+    </table>
+
+{% else %}
+    <p>No record are available.</p>
+{% endif %}
+
+<br>
+<br>
+
+</div>
+<div class="recordAdd">
+{#    <form role="form" autocomplete="on" action="http://bs302.sjc.aristanetworks.com/forms/submit/" onsubmit="if(!confirm('Are you going to submit the record?')){return false;}" method="post" id="myRecord">#}
+    <form method="post">
+        <div class="form" >
+            <label for="recordType">Income/Outcome</label>
+            <select id="recordType" name="type">
+                <option value="0">income</option>
+                <option value="1">outcome</option>
+            </select>
+            <label for="accountType">account type</label>
+            <select id="accountType" name="recordType">
+                <option value="0">traffic</option>
+                <option value="1">lease</option>
+                <option value="2">tax</option>
+                <option value="3">daily life</option>
+                <option value="4">other</option>
+            </select>
+            <label for="recordCount">record count</label>
+            <input id="recordCount" type="text" name = "recordCount"/>
+            <label for="date">Date</label>
+            <input id = "date" type="datetime">
+            <input value="{{ username }}" type="hidden" name="username"/>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

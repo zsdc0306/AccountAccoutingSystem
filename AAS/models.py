@@ -21,40 +21,39 @@ UserStatus = (
     (1, 'banned'),
 )
 
-class actor(models.Model):
-    name = models.CharField(max_length=10)
-    def __str__(self):
+RecordType = (
+    (0, 'income'),
+    (1, 'outcome'),
+)
+
+
+class Actor(models.Model):
+    name = models.CharField(max_length=10,unique=True,error_messages={'unique':"username has been used"})
+    def __unicode__(self):
         return self.name
 
 
 class User(models.Model):
-    actor = models.ForeignKey(actor, on_delete=models.CASCADE)
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
     status = models.IntegerField(default= 0, choices=UserStatus)
-    def __str__(self):
+    def __unicode__(self):
         return self.actor.name
 
 class VIPUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    VipID = models.IntegerField
-    def __str__(self):
+    VipID = models.IntegerField(default=88888)
+    def __unicode__(self):
         return self.user.actor.name
 
 
-class record(models.Model):
-    dataUpdate = models.DateTimeField('Create/Update time')
-    owner = models.ForeignKey(User,on_delete=None)
-    def __str__(self):
-        return self.owner.actor.name
-
-class inCome(models.Model):
-    record = models.ForeignKey(record,on_delete=models.CASCADE)
-    count = models.FloatField
-    type = models.IntegerField(choices=AccountType)
-
-class outCome(models.Model):
-    record = models.ForeignKey(record,on_delete=models.CASCADE)
-    count = models.FloatField
-    type = models.IntegerField(choices=AccountType)
+class Record(models.Model):
+    dateUpdate = models.DateTimeField('Create/Update time')
+    owner = models.ForeignKey(User,on_delete=models.CASCADE)
+    recordtype = models.IntegerField(choices = RecordType,default=0)
+    type = models.IntegerField(choices=AccountType,default=4)
+    count = models.FloatField(default= 0.0)
+    def __unicode__(self):
+        return str(self.dateUpdate)[:-6] +":" + self.owner.actor.name
 
 
 
