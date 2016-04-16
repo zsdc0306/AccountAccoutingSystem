@@ -83,8 +83,6 @@ def createRecord(request):
         content = e.message
     return HttpResponse(content)
 
-
-
 # create user, status default as normal
 def addAccount(request):
     username = request.POST["userName"]
@@ -126,6 +124,9 @@ def upgradeAccount(request):
     return HttpResponse(content)
 
 
+def actionRecord(request):
+    pass
+
 def deleteRecord(request):
     recordID = request.POST["deleterecordID"]
     target = Record.objects.get(id = recordID)
@@ -137,7 +138,22 @@ def deleteRecord(request):
     return HttpResponse(content)
 
 def updateRecord(request):
-    pass
+    recordID = request.POST["recordid"]
+    type = request.POST["type"]
+    recordType = request.POST["recordtype"]
+    count = request.POST["recordCount"]
+    dateUpdate = request.POST["dateUpdate"]
+    target = Record.objects.get(id = recordID)
+    target.type=type
+    target.recordtype = recordType
+    target.count = count
+    target.dateUpdate = dateUpdate
+    try:
+        target.save()
+        content = "update successfully"
+    except Exception as e:
+        content = e.message
+    return HttpResponse(content)
 
 def exportCSV(request):
     username = request.POST["exportrecordname"]

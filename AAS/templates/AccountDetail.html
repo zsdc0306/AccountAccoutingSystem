@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
+
 <head>
     <meta charset="UTF-8">
     <title>Account Detail</title>
+    <style>
+DIV.table
+{
+    display:table;
+}
+FORM.tr, DIV.tr
+{
+    display:table-row;
+}
+SPAN.td
+{
+    display:table-cell;
+}
+</style>
 </head>
 <body>
+
 
 <div class="Account">
     <h1>Account Detail</h1>
@@ -55,64 +71,41 @@
 </div>
 {% endif %}
 {% if recordlist %}
-    <table width="50%" style="text-align: center;">
-    <tr style="font-weight: bolder">
-        <td>
-            owner
-        </td>
-        <td>
-            income/outcome
-        </td>
-        <td>
-            type
-        </td>
-        <td>
-            count
-        </td>
-        <td>
-            date
-        </td>
-        <td>
-            action
-        </td>
-    </tr>
+    <div class="table" style="width: 50%; text-align: center">
+    <div class="tr" style="font-weight: bolder">
+        <span class="td">owner</span>
+        <span class="td">income/outcome</span>
+        <span class="td">type</span>
+        <span class="td">count</span>
+        <span class="td">date</span>
+        <span class="td">delete</span>
+        <span class="td">update</span>
+    </div>
         {% for record in recordlist %}
-    <tr id="{{ record.id }}">
-        <td>
-            {{ record.owner }}
-        </td>
-        <td>
-            {{ record.recordtype }}
-        </td>
-        <td>
-            {{ record.type }}
-        </td>
-        <td>
-            {{ record.count }}
-        </td>
-        <td>
-            {{ record.dateUpdate|date:"Y-m-d, H:i:s" }}
-        </td>
-        <td>
-            <form id="recordUpdate" method="post" action="/AAS/form/record/update/" onsubmit="if(!confirm('Are you going to submit the update?')){return false;}">
-                {% csrf_token %}
+            <form class="tr" id = "{{ record.id }}" method="post" action="/AAS/form/record/update/" onsubmit="if(!confirm('Are you going to update the record?')){return false;}">
+            {% csrf_token %}
+                <span class="td">{{ record.owner }}</span>
+                <span class="td">{{ record.recordtype }}</span>
+                <span class="td">{{ record.type }}</span>
+                <span class="td">{{ record.count }}</span>
+                <span class="td">{{ record.dateUpdate|date:"Y-m-d, H:i:s" }}</span>
                 <input type="hidden" value="{{ record.id }}" name = "updaterecordID">
-                <button onclick="">
-                    update
-                </button>
+                <span>
+                    <button name="update" value="1" onclick=recordupdate({{ record.id }}) >
+                        update
+                    </button>
+                </span>
             </form>
-            <form id="recordDelete" method="post" action="/AAS/form/record/delete/" onsubmit="if(!confirm('Are you going to delete the record?')){return false;}">
+            <form class="td" id="recordDelete" method="post" action="/AAS/form/record/delete/" onsubmit="if(!confirm('Are you going to delete the record?')){return false;}">
                 {% csrf_token %}
                 <input type="hidden" value="{{ record.id }}" name = "deleterecordID">
                 <button>
                     delete
                 </button>
             </form>
-        </td>
+        {% endfor %}
+    </div>
 
-    </tr>
-    {% endfor %}
-    </table>
 
 {% else %}
     <p>No record are available.</p>
@@ -123,6 +116,7 @@
 
 </div>
 <div class="recordAdd">
+<h1>Add record</h1>
     <form role="form" autocomplete="on" action="/AAS/form/record/add/" onsubmit="if(!confirm('Are you going to submit the record?')){return false;}" method="post" id="myRecord">
         <div class="form" >
             {% csrf_token %}
@@ -151,5 +145,15 @@
     </form>
 </div>
 {% endif %}
+<script type="text/javascript">
+    function recordupdate(rowid){
+        var updatecontent = "{% csrf_token %}"+' <span class="td">{{ username }}</span><span class="td"><select id="recordType" name="recordtype"><option value="0">income</option><option value="1">outcome</option></select></span><span class="td"><select id="accountType" name="type"><option value="0">traffic</option><option value="1">lease</option><option value="2">tax</option><option value="3">daily life</option><option value="4">other</option></select></span><span class="td"> <input id="recordCount" type="text" name = "recordCount"/></span><span class="td"><input id = "date" type="datetime-local" name="dateUpdate" value = {{placement.date|date:"Y-m-d H:i:s" }}></span><input value="{{ username }}" type="hidden" name="username"/><input value='+rowid+ ' type="hidden" name="recordid"/><button type="submit" class="btn btn-primary">Submit</button>';
+        var row = document.getElementById(rowid);
+
+        row.innerHTML=updatecontent;
+
+    }
+</script>
 </body>
 </html>
+
