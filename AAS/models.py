@@ -56,5 +56,14 @@ class Record(models.Model):
         return str(self.dateUpdate)[:-6] +":" + self.owner.actor.name
 
 
+class Income(models.Model):
+    type = models.IntegerField(choices=RecordType,default=0)
+    count = models.FloatField(default = 0.0)
 
+class Outcome(models.Model):
+    type = models.IntegerField(choices=RecordType,default=0)
+    count = models.FloatField(default = 0.0)
+
+class Admin(models.Model):
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
 

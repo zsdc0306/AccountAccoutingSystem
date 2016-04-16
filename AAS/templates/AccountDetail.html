@@ -8,19 +8,6 @@
 
 <div class="Account">
     <h1>Account Detail</h1>
-{#    <table>#}
-{#        <tr>#}
-{#            <td>User name</td>#}
-{#            <td>Status</td>#}
-{#            <td>VIP number</td>#}
-{#        </tr>#}
-{#        <tr>#}
-{#            <td>{{ username }}</td>#}
-{#            <td>{{ status }}</td>#}
-{#            <td>{{ VIPID }}</td>#}
-{#        </tr>#}
-{##}
-{#    </table>#}
     <h4>User name:</h4>
     <p class = "col-lg-1">{{ username }}</p>
     <h4>Status:</h4>
@@ -43,9 +30,30 @@
     </form>
     {% endif %}
 
+{% if status == "banned" %}
+    <h3 style="color: red;">Sorry you are banned. Contact the Admin</h3>
+{% else %}
 </div>
 <div class="Record Detail" >
     <h1>Record List</h1>
+{% if VIPID %}
+<div class="button">
+    <form id="export" method="post" action="/AAS/form/record/export/">
+        {% csrf_token %}
+        <input value="{{ username }}" type="hidden" name = "exportrecordname">
+        <button type="submit">
+            EXPORT
+        </button>
+    </form>
+    <form id="chart" method="post" action="/AAS/form/record/generatechart/">
+        {% csrf_token %}
+        <input value="{{ username }}" type="hidden" name = "chartrecordname">
+        <button type="submit">
+            GEN CHART
+        </button>
+    </form>
+</div>
+{% endif %}
 {% if recordlist %}
     <table width="50%" style="text-align: center;">
     <tr style="font-weight: bolder">
@@ -69,31 +77,33 @@
         </td>
     </tr>
         {% for record in recordlist %}
-    <tr>
+    <tr id="{{ record.id }}">
         <td>
             {{ record.owner }}
-        </td>
-        <td>
-            {{ record.type }}
         </td>
         <td>
             {{ record.recordtype }}
         </td>
         <td>
+            {{ record.type }}
+        </td>
+        <td>
             {{ record.count }}
         </td>
         <td>
-            {{ record.dateUpdate }}
+            {{ record.dateUpdate|date:"Y-m-d, H:i:s" }}
         </td>
         <td>
-            <form id="recordDelete" method="post" action="/AAS/form/update/">
-                <input type="hidden" value="{{ record.id }}" name = "updaterecord">
+            <form id="recordUpdate" method="post" action="/AAS/form/record/update/" onsubmit="if(!confirm('Are you going to submit the update?')){return false;}">
+                {% csrf_token %}
+                <input type="hidden" value="{{ record.id }}" name = "updaterecordID">
                 <button onclick="">
                     update
                 </button>
             </form>
-            <form id="recordDelete" method="post" action="/AAS/form/delete/">
-                <input type="hidden" value="{{ record.id }}" name = "deleterecord">
+            <form id="recordDelete" method="post" action="/AAS/form/record/delete/" onsubmit="if(!confirm('Are you going to delete the record?')){return false;}">
+                {% csrf_token %}
+                <input type="hidden" value="{{ record.id }}" name = "deleterecordID">
                 <button>
                     delete
                 </button>
@@ -113,16 +123,16 @@
 
 </div>
 <div class="recordAdd">
-{#    <form role="form" autocomplete="on" action="http://bs302.sjc.aristanetworks.com/forms/submit/" onsubmit="if(!confirm('Are you going to submit the record?')){return false;}" method="post" id="myRecord">#}
-    <form method="post">
+    <form role="form" autocomplete="on" action="/AAS/form/record/add/" onsubmit="if(!confirm('Are you going to submit the record?')){return false;}" method="post" id="myRecord">
         <div class="form" >
+            {% csrf_token %}
             <label for="recordType">Income/Outcome</label>
-            <select id="recordType" name="type">
+            <select id="recordType" name="recordtype">
                 <option value="0">income</option>
                 <option value="1">outcome</option>
             </select>
             <label for="accountType">account type</label>
-            <select id="accountType" name="recordType">
+            <select id="accountType" name="type">
                 <option value="0">traffic</option>
                 <option value="1">lease</option>
                 <option value="2">tax</option>
@@ -132,7 +142,7 @@
             <label for="recordCount">record count</label>
             <input id="recordCount" type="text" name = "recordCount"/>
             <label for="date">Date</label>
-            <input id = "date" type="datetime">
+            <input id = "date" type="datetime-local" name="dateUpdate" value = {{placement.date|date:"Y-m-d H:i:s" }}>
             <input value="{{ username }}" type="hidden" name="username"/>
         </div>
         <div class="btn-group">
@@ -140,6 +150,6 @@
         </div>
     </form>
 </div>
-
+{% endif %}
 </body>
 </html>

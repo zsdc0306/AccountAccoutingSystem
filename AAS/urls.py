@@ -9,5 +9,9 @@ urlpatterns = [
     # url(r'^create/(?P<username>[A-Za-z0-9]+)/$', views.addAccount, name= "addAccount"),
     url(r'^addAccount/submit/',views.addAccount,name="addAccount"),
     url(r'^form/submit/', views.upgradeAccount, name="upgradeAccount"),
-    url(r'^form/delete/', views.deleteRecord, name="deleteRecord"),
+    url(r'^form/record/delete/', views.deleteRecord, name="deleteRecord"),
+    url(r'^form/record/update/', views.updateRecord, name="deleteRecord"),
+    url(r'^form/record/add/', views.createRecord, name="createRecord"),
+    url(r'^form/record/generatechart/', views.genChart, name="genChart"),
+    url(r'^form/record/export/', views.exportCSV, name="exportCSV"),
 ]
